@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Promotions App</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        :root {
+            --background-color: #121212;
+            --secondary-bg-color: #1e1e1e;
+            --tertiary-bg-color: #2a2a2a;
+            --text-color: #ffffff;
+            --hint-color: #b3b3b3;
+            --accent-color: #007aff; /* Bleu Telegram/iOS */
+            --discount-color: #34c759; /* Vert pour le prix réduit */
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            overscroll-behavior-y: none;
+        }
+
+        /* --- Structure & Navigation --- */
+        .page {
+            display: none;
+            flex-direction: column;
+            min-height: 100vh;
+            box-sizing: border-box;
+            padding: 20px;
+        }
+        .page.active {
+            display: flex;
+        }
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            position: relative; /* Pour le positionnement du titre */
+            min-height: 40px; /* Hauteur minimale pour alignement */
+        }
+
+        .back-button {
+            background: none;
+            border: none;
+            color: var(--accent-color);
+            font-size: 1.8rem;
+            cursor: pointer;
+            padding: 0 10px 0 0; /* Un peu de padding pour faciliter le clic */
+            position: absolute; /* Le sortir du flux normal */
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-align: center;
+            flex-grow: 1; /* Permet au titre de prendre l'espace restant */
+            padding: 0 40px; /* Espace pour éviter chevauchement avec bouton retour */
+        }
+
+        /* --- Page d'accueil (Catégories) --- */
+        #category-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Responsive */
+            gap: 15px;
+        }
+
+        .category-card {
+            background-color: var(--secondary-bg-color);
+            border-radius: 15px;
+            padding: 20px;
+            cursor: pointer;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+            text-align: center;
+            border: 1px solid var(--tertiary-bg-color);
+        }
+        .category-card:hover {
+            transform: translateY(-5px);
+            background-color: var(--tertiary-bg-color);
+        }
+        .category-card .icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        .category-card .name {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        /* --- Page Promotion / Formulaire --- */
+        .promo-description, .promo-procedure {
+            background-color: var(--secondary-bg-color);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .promo-description h3, .promo-procedure h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            color: var(--accent-color);
+            font-size: 1.1rem;
+        }
+        .promo-description p, .promo-procedure p {
+            margin: 0;
+            color: var(--hint-color);
+            line-height: 1.5;
+        }
+
+        .promo-form h3 {
+             margin-top: 0;
+            margin-bottom: 20px;
+            color: var(--accent-color);
+            font-size: 1.1rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--hint-color);
+            font-weight: 500;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="date"],
+        .form-group input[type="number"],
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--tertiary-bg-color);
+            background-color: var(--secondary-bg-color);
+            color: var(--text-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            box-sizing: border-box; /* Important pour que le padding ne dépasse pas */
+        }
+        .form-group textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .discount-display {
+            background-color: var(--secondary-bg-color);
+            border-radius: 8px;
+            padding: 10px 15px;
+            margin-top: 10px;
+            border: 1px dashed var(--discount-color);
+        }
+        .discount-display span {
+             color: var(--discount-color);
+             font-weight: 600;
+        }
+
+        .submit-button {
+            width: 100%;
+            padding: 15px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: filter 0.2s ease;
+            margin-top: 30px;
+        }
+        .submit-button:hover {
+            filter: brightness(1.2);
+        }
+         .submit-button:disabled {
+            background-color: var(--tertiary-bg-color);
+            color: var(--hint-color);
+            cursor: not-allowed;
+            filter: none;
+        }
+
+        /* Helper class pour cacher des éléments */
+        .hidden {
+            display: none;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Icônes SVG réutilisables -->
+    <svg width="0" height="0" style="position:absolute">
+        <defs>
+            <!-- Ajoutez des icônes ici si nécessaire -->
+        </defs>
+    </svg>
+
+    <!-- Page d'accueil (Catégories) -->
+    <div id="page-home" class="page active">
+        <h1 class="page-title">Nos Promotions</h1>
+        <div id="category-list">
+            <!-- Les catégories seront injectées ici -->
+        </div>
+    </div>
+
+    <!-- Page Promotion / Formulaire -->
+    <div id="page-promotion" class="page">
+        <div class="page-header">
+            <button class="back-button" id="back-to-home">‹</button>
+            <h1 id="promo-page-title" class="page-title">Promotion</h1>
+        </div>
+
+        <div class="promo-description">
+            <h3>🎁 Description de la Promotion</h3>
+            <p id="promo-description-text"></p>
+        </div>
+
+        <div class="promo-procedure">
+            <h3>📝 Procédure à suivre</h3>
+            <p id="promo-procedure-text"></p>
+        </div>
+
+        <div class="promo-form">
+            <h3>✍️ Remplissez votre demande</h3>
+            <form id="promo-form-fields">
+                <!-- Les champs du formulaire seront injectés ici -->
+            </form>
+            <button id="submit-promo-button" class="submit-button" disabled>Envoyer la demande</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
