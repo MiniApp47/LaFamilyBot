@@ -40,6 +40,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 { id: 'estimatedPrice', label: 'Prix estimé sans réduction (€)', type: 'number', required: false }
             ]
         },
+
+        {
+            id: 'Plane',
+            name: 'Billets D\'avion',
+            icon: '✈️',
+            description: 'Obtenez 30% de réduction sur vos billets d\avion.',
+            procedure: '1. Remplissez le formulaire avec vos besoins.\n2. Nous vous enverrons un devis personnalisé avec la réduction appliquée.',
+            discountPercent: 30,
+            formFields: [
+                { id: 'stardandend', label: 'Depart et Arrivé', type: 'text', required: true },
+                { id: 'compagnie', label: 'Compagnie', type: 'text', required: true },
+                { id: 'dayPlane', label: 'Date du vol', type: 'date', required: true },
+                { id: 'hourePlane', label: 'Heure du vol', type: 'time', required: true },
+                { id: 'estimatedPrice', label: 'Prix estimé sans réduction (€)', type: 'number', required: false }
+            ]
+        },
         // Ajoute d'autres promotions ici
     ];
 
