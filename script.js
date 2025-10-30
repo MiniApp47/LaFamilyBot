@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     // --- CONFIGURATION ---
-    const TARGET_TELEGRAM_USERNAME = 'TON_NOM_D_UTILISATEUR_TELEGRAM'; // !!! REMPLACE PAR LE BON PSEUDO !!!
+    const TARGET_TELEGRAM_USERNAME = '@michaeldelafamille'; // !!! REMPLACE PAR LE BON PSEUDO !!!
 
     // --- DONNÉES DES PROMOTIONS ---
     const promotionsData = [
@@ -27,8 +27,8 @@ document.addEventListener('DOMContentLoaded', function() {
             categoryImage: 'image/Voyage.png',
             layoutClass: 'full-width',
             description: 'Bénéficiez de -30% sur le prix total de votre réservation Booking.com.',
-            procedure: '1. Trouvez votre logement sur Booking.com.\n2. Remplissez le formulaire ci-dessous avec les détails.\n3. Nous vous contacterons pour finaliser la réservation avec la réduction.',
-            discountPercent: 30,
+            procedure: '1. Remplissez les informations ci-dessous.\n2. Incluez un screen de la réservation souhaitée dans votre message Telegram.\n3. Nous vous contacterons pour finaliser.',
+            discountPercent: 40,
             formFields: [
                 { id: 'propertyName', label: 'Nom du logement', type: 'text', required: true },
                 { id: 'checkInDate', label: 'Date d\'arrivée', type: 'date', required: true },
@@ -41,15 +41,43 @@ document.addEventListener('DOMContentLoaded', function() {
             name: '',
             categoryImage: 'image/loc.png',
             layoutClass: '',
-            description: 'Obtenez 15% de réduction sur votre location de voiture.',
-            procedure: '1. Remplissez le formulaire avec vos besoins.\n2. Nous vous enverrons un devis personnalisé avec la réduction appliquée.',
-            discountPercent: 15,
-            formFields: [
-                { id: 'carType', label: 'Type de voiture souhaité', type: 'text', required: true },
-                { id: 'pickupDate', label: 'Date de prise en charge', type: 'date', required: true },
-                { id: 'returnDate', label: 'Date de retour', type: 'date', required: true },
-                { id: 'location', label: 'Lieu (Ville/Aéroport)', type: 'text', required: true },
-                { id: 'estimatedPrice', label: 'Prix estimé sans réduction (€)', type: 'number', required: false }
+            // On enlève la description et les formFields pour les remplacer par des subcategories
+            subcategories: [
+                {
+                    id: 'loc_150_300',
+                    name: '',
+                    categoryImage: 'image/150.png', // !!! REMPLACE PAR TON IMAGE !!!
+                    layoutClass: 'medium-width', // Prendra la moitié (carré)
+                    description: 'Obtenez 30% de réduction sur votre location de voiture.',
+                    procedure: '1. Remplissez le formulaire ci-dessous.\n2. Une carte bancaire (pas de carte de débit/retrait) au nom du conducteur principal est OBLIGATOIRE pour la caution.\n3. Nous vous enverrons un devis personnalisé.',
+                    discountPercent: 30,
+                    formFields: [
+                        { id: 'rentalName', label: 'Nom complet (conducteur)', type: 'text', required: true },
+                        { id: 'rentalDOB', label: 'Date de naissance (conducteur)', type: 'date', required: true },
+                        { id: 'pickupLocation', label: 'Lieu de prise en charge', type: 'text', required: true },
+                        { id: 'pickupDate', label: 'Date et heure de prise en charge', type: 'datetime-local', required: true },
+                        { id: 'returnDate', label: 'Date et heure de dépose', type: 'datetime-local', required: true },
+                        { id: 'carType', label: 'Type de voiture souhaité', type: 'text', required: false }
+                    ]
+                },
+                
+                {
+                    id: 'loc_900_plus',
+                    name: '',
+                    categoryImage: 'image/900.png', // !!! REMPLACE PAR TON IMAGE !!!
+                    layoutClass: 'medium-width', // Prendra la moitié (carré)
+                    description: 'Obtenez 30% de réduction sur votre location de voiture.',
+                    procedure: '1. Remplissez le formulaire ci-dessous.\n2. Une carte bancaire (pas de carte de débit/retrait) au nom du conducteur principal est OBLIGATOIRE pour la caution.\n3. Nous vous enverrons un devis personnalisé.',
+                    discountPercent: 30,
+                    formFields: [
+                        { id: 'rentalName', label: 'Nom complet (conducteur)', type: 'text', required: true },
+                        { id: 'rentalDOB', label: 'Date de naissance (conducteur)', type: 'date', required: true },
+                        { id: 'pickupLocation', label: 'Lieu de prise en charge', type: 'text', required: true },
+                        { id: 'pickupDate', label: 'Date et heure de prise en charge', type: 'datetime-local', required: true },
+                        { id: 'returnDate', label: 'Date et heure de dépose', type: 'datetime-local', required: true },
+                        { id: 'carType', label: 'Type de voiture souhaité', type: 'text', required: false }
+                    ]
+                }
             ]
         },
          {
@@ -74,7 +102,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     id: '-30',
                     name: '',
                     categoryImage: 'image/-30.png',
-                    layoutClass: 'full-width',
                     description: 'Profitez de -20% sur une sélection de boutiques de vêtements.',
                     procedure: '1. Choisissez votre boutique préférée.\n2. Indiquez le montant total de votre panier.\n3. Nous vous enverrons le lien de paiement avec la réduction.',
                     discountPercent: 30,
@@ -102,7 +129,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     id: '-35',
                     name: '',
                     categoryImage: 'image/-35.png',
-                    layoutClass: 'full-width',
                     description: 'Réductions variables sur les produits High-Tech.',
                     procedure: 'Remplissez le formulaire avec le produit souhaité.',
                     discountPercent: 35,
@@ -298,19 +324,46 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                     formGroup.appendChild(imageSelectContainer); // Ajoute le conteneur d'images au groupe
     
-                } else if (field.type === 'select') { // Laisse le 'select' standard pour d'autres usages
+                } else if (field.type === 'select') {
                     inputElement = document.createElement('select');
-                    // ... (code existant pour le select standard) ...
+                    const defaultOption = document.createElement('option');
+                    defaultOption.value = '';
+                    defaultOption.textContent = `-- ${field.label} --`;
+                    defaultOption.disabled = true;
+                    defaultOption.selected = true;
+                    inputElement.appendChild(defaultOption);
+                    if (field.options) {
+                        field.options.forEach(optionText => {
+                            const option = document.createElement('option');
+                            option.value = optionText;
+                            option.textContent = optionText;
+                            inputElement.appendChild(option);
+                        });
+                    }
                     formGroup.appendChild(inputElement); // Ajoute le select au groupe
                 } else if (field.type === 'textarea') {
                     inputElement = document.createElement('textarea');
-                    // ... (code existant pour textarea) ...
+                    inputElement.id = field.id;
+                    inputElement.name = field.id;
                     formGroup.appendChild(inputElement); // Ajoute textarea au groupe
-                } else { // Cas par défaut (input text, number, date, etc.)
+                } else { // Inputs normaux (text, date, number, datetime-local)
                     inputElement = document.createElement('input');
-                     // ... (code existant pour input) ...
-                     formGroup.appendChild(inputElement); // Ajoute input au groupe
+                    inputElement.type = field.type;
+                    inputElement.id = field.id;
+                    inputElement.name = field.id;
+                    if (field.type === 'number') {
+                        inputElement.step = '0.01';
+                        inputElement.min = '0';
+                    }
+                    if (field.type === 'datetime-local' || field.type === 'date') {
+                         inputElement.placeholder = ' '; 
+                    }
+                    formGroup.appendChild(inputElement);
                 }
+                if (field.required && inputElement) { // Attache 'required' à l'élément créé
+                    inputElement.required = true;
+                }
+                 
                  
                 // Logique pour le calcul de réduction (inchangée, mais attachée à l'input approprié)
                 if (field.calculateDiscount && currentPromotion.discountPercent && inputElement && inputElement.type !== 'hidden') {
@@ -365,23 +418,22 @@ document.addEventListener('DOMContentLoaded', function() {
             if (submitPromoButton) submitPromoButton.disabled = true;
             return;
         }
-
+    
         let isFormValid = true;
         currentPromotion.formFields.forEach(field => {
             const input = document.getElementById(field.id);
             if (!input) {
-                if (field.id !== 'otherShop') {
-                   console.warn(`Element with ID ${field.id} not found for validation.`);
-                }
+                 if (field.id !== 'otherShop') { console.warn(`Element ID ${field.id} not found.`); }
                  return;
             }
-
-            const formGroup = input.closest('.form-group'); // Get parent group
-            // Ignore validation for hidden fields (like 'otherShop' when not needed)
+            const formGroup = input.closest('.form-group');
+            
+            // Ignore les champs cachés (comme 'otherShop')
             if (formGroup && formGroup.classList.contains('hidden')) {
-                 return;
+                return; 
             }
-
+    
+            // Cas général pour les champs requis
             if (field.required && !input.value.trim()) {
                 isFormValid = false;
             }
@@ -390,55 +442,52 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
 
-    function formatPromoMessage() {
-        if (!currentPromotion) return "Erreur: Aucune promotion sélectionnée.";
+    
+// REMPLACE l'ancienne fonction par celle-ci
+function formatPromoMessage() {
+    if (!currentPromotion) return "Erreur: Aucune promotion sélectionnée.";
+    const promoTitle = parentCategory ? `${parentCategory.name} - ${currentPromotion.name}` : currentPromotion.name;
+    
+    let message = `*Nouvelle demande - ${promoTitle}*\n\n*Détails de la demande :*\n`;
+    let finalPriceInfo = '';
 
-        const promoTitle = parentCategory ? `${parentCategory.name} - ${currentPromotion.name}` : currentPromotion.name;
-
-        let message = `*Nouvelle demande - ${promoTitle}*\n\n`;
-        message += `*Détails de la demande :*\n`;
-        let finalPriceInfo = '';
-
-        if (currentPromotion.formFields) {
-            currentPromotion.formFields.forEach(field => {
-                const input = document.getElementById(field.id);
-                 // Check if input exists AND its parent group is not hidden
-                const formGroup = input ? input.closest('.form-group') : null;
-                if (input && input.value && formGroup && !formGroup.classList.contains('hidden')) {
-                    if (field.id === 'shopName' && input.value === 'Autre (préciser)') {
-                         const otherShopInput = document.getElementById('otherShop');
-                         if (otherShopInput && otherShopInput.value) {
-                             message += `- ${field.label}: Autre (${otherShopInput.value})\n`;
-                         } else {
-                              message += `- ${field.label}: Autre (non précisé)\n`;
-                         }
-                    } else { // Removed the 'else if (field.id !== 'otherShop')' to include all visible fields
-                         message += `- ${field.label}: ${input.value}\n`;
+    if (currentPromotion.formFields) {
+        currentPromotion.formFields.forEach(field => {
+            const input = document.getElementById(field.id);
+            const formGroup = input ? input.closest('.form-group') : null;
+            
+            // Si le champ est visible et a une valeur
+            if (input && input.value && formGroup && !formGroup.classList.contains('hidden')) {
+                 if (field.type === 'image-select' && input.value === 'Autre (préciser)') {
+                    const otherShopInput = document.getElementById('otherShop');
+                    message += `- ${field.label}: Autre (${otherShopInput?.value || 'non précisé'})\n`;
+                 } else {
+                    message += `- ${field.label}: ${input.value}\n`;
+                 }
+                
+                // Calcul de réduction (si applicable)
+                 if (field.calculateDiscount && currentPromotion.discountPercent) {
+                    const originalPrice = parseFloat(input.value);
+                    if (!isNaN(originalPrice) && originalPrice > 0) {
+                        const discountAmount = (originalPrice * currentPromotion.discountPercent) / 100;
+                        const finalPrice = originalPrice - discountAmount;
+                        finalPriceInfo = `*Prix après ${currentPromotion.discountPercent}% réduction:* ${finalPrice.toFixed(2)}€\n`;
                     }
-
-                    if (field.calculateDiscount && currentPromotion.discountPercent) {
-                        const originalPrice = parseFloat(input.value);
-                        if (!isNaN(originalPrice) && originalPrice > 0) {
-                            const discountAmount = (originalPrice * currentPromotion.discountPercent) / 100;
-                            const finalPrice = originalPrice - discountAmount;
-                            finalPriceInfo = `*Prix après ${currentPromotion.discountPercent}% réduction:* ${finalPrice.toFixed(2)}€\n`;
-                        }
-                    }
-                } else if (field.required && (!formGroup || !formGroup.classList.contains('hidden'))) {
-                    // Log warning only for required fields that are supposed to be visible
-                    console.warn(`Champ requis "${field.label}" (ID: ${field.id}) manquant ou caché dans le message.`);
                 }
-            });
-        }
-
-
-        if (finalPriceInfo) {
-            message += `\n${finalPriceInfo}`;
-        }
-        message += `\n*Promotion Appliquée:* ${currentPromotion.name} (-${currentPromotion.discountPercent || 'N/A'}%)\n`;
-        message += `\n_Demande envoyée le ${new Date().toLocaleDateString('fr-FR')}_`;
-        return message;
+            } 
+            // Si le champ est requis mais vide (et non caché)
+            else if (field.required && (!formGroup || !formGroup.classList.contains('hidden'))) {
+                 console.warn(`Champ requis "${field.label}" manquant.`);
+            }
+        });
     }
+
+      if (finalPriceInfo) { message += `\n${finalPriceInfo}`; }
+      message += `\n*Promotion Appliquée:* ${currentPromotion.name} (-${currentPromotion.discountPercent || 'N/A'}%)\n`;
+      message += `\n_Demande envoyée le ${new Date().toLocaleDateString('fr-FR')}_`;
+      return message;
+}
+
 
 
     // --- GESTION DES ÉVÉNEMENTS ---

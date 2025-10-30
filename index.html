@@ -91,8 +91,9 @@
         /* --- Page des catégories --- */
         .category-grid {
             display: grid;
-            grid-template-columns: 1fr;
+            grid-template-columns: repeat(2, 1fr);
             gap: 15px;
+            margin-top: 8vh;
         }
 
         .category-card {
@@ -127,6 +128,10 @@
 
         .category-card:not(.full-width) {
             aspect-ratio: 4 / 3;
+        }
+
+        .category-card.medium-width{
+            aspect-ratio: 3 / 3;
         }
 
         .category-card.feat-bg {
@@ -295,6 +300,51 @@
     border-color: var(--accent-color);
     transform: scale(1.05); /* Met en évidence l'option sélectionnée */
     box-shadow: 0 0 0 3px var(--accent-color-transparent);
+}
+
+
+/* AJOUTE CE NOUVEAU STYLE pour le formulaire 'dark mode' */
+.promo-form .form-group {
+    margin-bottom: 20px;
+}
+
+.promo-form .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--hint-color, #b3b3b3);
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.promo-form .form-group input[type="text"],
+.promo-form .form-group input[type="date"],
+.promo-form .form-group input[type="datetime-local"],
+.promo-form .form-group input[type="number"],
+.promo-form .form-group textarea,
+.promo-form .form-group select {
+    width: 100%;
+    padding: 14px 12px;
+    border: 1px solid var(--tertiary-bg-color, #282828);
+    background-color: var(--secondary-bg-color, #181818);
+    color: var(--text-color, #ffffff);
+    border-radius: 10px;
+    font-size: 1rem;
+    box-sizing: border-box; /* Important */
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.promo-form .form-group input:focus,
+.promo-form .form-group textarea:focus,
+.promo-form .form-group select:focus {
+    outline: none;
+    border-color: var(--accent-color, #1DB954); /* Couleur d'accentuation au clic */
+    box-shadow: 0 0 0 3px rgba(29, 185, 84, 0.3); /* Lueur d'accentuation */
+}
+
+/* Force le calendrier et l'heure à s'afficher en mode sombre */
+.promo-form .form-group input[type="date"],
+.promo-form .form-group input[type="datetime-local"] {
+    color-scheme: dark;
 }
 
     </style>
