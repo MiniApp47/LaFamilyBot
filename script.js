@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     // --- CONFIGURATION ---
-    const TARGET_TELEGRAM_USERNAME = '@michaeldelafamille'; // !!! REMPLACE PAR LE BON PSEUDO !!!
+    const TARGET_TELEGRAM_USERNAME = 'michaeldelafamille'; // !!! REMPLACE PAR LE BON PSEUDO !!!
 
     // --- DONNÉES DES PROMOTIONS ---
     const promotionsData = [
