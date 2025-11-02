@@ -193,7 +193,7 @@
         }
 
 
-    
+
 
         /* AJOUTE ce style pour le select dans les formulaires */
         .form-group select {
@@ -384,7 +384,29 @@
         .promo-form .form-group input[type="date"],
         .promo-form .form-group input[type="datetime-local"] {
             color-scheme: dark;
+            display: block;
+            /* S'assure qu'il prend toute la largeur */
+            position: relative;
+            padding-top: 14px;
+            /* Aligne le texte */
+            padding-bottom: 14px;
         }
+
+        /* Astuce pour afficher un "placeholder" sur les champs de date */
+        .promo-form .form-group input[type="date"]::-webkit-datetime-edit-text,
+        .promo-form .form-group input[type="datetime-local"]::-webkit-datetime-edit-text {
+            opacity: 0.5;
+            color: var(--hint-color, #b3b3b3);
+        }
+
+        .promo-form .form-group input[type="date"]:focus::-webkit-datetime-edit-text,
+        .promo-form .form-group input[type="date"]:valid::-webkit-datetime-edit-text,
+        .promo-form .form-group input[type="datetime-local"]:focus::-webkit-datetime-edit-text,
+        .promo-form .form-group input[type="datetime-local"]:valid::-webkit-datetime-edit-text {
+            opacity: 1;
+            color: var(--text-color, #ffffff);
+        }
+
 
 
         /* AJOUTE ce nouveau style pour les boutons d'action rapide */
@@ -461,7 +483,7 @@
             /* Force le format carré */
         }
 
-        .vente-unique-style{
+        .vente-unique-style {
             height: 15vh;
         }
     </style>
