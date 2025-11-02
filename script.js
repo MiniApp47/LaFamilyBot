@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 { 
                     label: 'Offre Getyourguide', 
                     message: "Bonjour, je suis intéressé par l'offre -40% sur Getyourguide.",
-                    imageSrc: 'image/Getlogo.jpg' ,
+                    imageSrc: 'image/GetLogo.jpg' ,
                     layoutClass: 'quick-send-full' 
                 },
                 { 
