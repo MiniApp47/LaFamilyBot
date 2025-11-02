@@ -500,12 +500,17 @@ function renderPromotionPage(promoData) {
 
 
     
-// REMPLACE l'ancienne fonction par celle-ci
-function formatPromoMessage() {
+
+
+//  fonction formatPromoMessageForLink :
+function formatPromoMessageForLink() {
     if (!currentPromotion) return "Erreur: Aucune promotion sélectionnée.";
+
     const promoTitle = parentCategory ? `${parentCategory.name} - ${currentPromotion.name}` : currentPromotion.name;
     
-    let message = ` 🛒 Nouvelle demande - ${promoTitle} \n\n ➡️ Détails de la demande : \n`;
+    // On ajoute les emojis ici
+    let message = `🆕 Nouvelle demande - ${promoTitle}\n\n`;
+    message += `📋 Détails de la demande :\n`;
     let finalPriceInfo = '';
 
     if (currentPromotion.formFields) {
@@ -513,35 +518,32 @@ function formatPromoMessage() {
             const input = document.getElementById(field.id);
             const formGroup = input ? input.closest('.form-group') : null;
             
-            // Si le champ est visible et a une valeur
             if (input && input.value && formGroup && !formGroup.classList.contains('hidden')) {
                  if (field.type === 'image-select' && input.value === 'Autre (préciser)') {
                     const otherShopInput = document.getElementById('otherShop');
-                    message += `- ${field.label}: Autre (${otherShopInput?.value || 'non précisé'})\n`;
+                    message += `▪️ ${field.label}: Autre (${otherShopInput?.value || 'non précisé'})\n`;
                  } else {
-                    message += `- ${field.label}: ${input.value}\n`;
+                    message += `▪️ ${field.label}: ${input.value}\n`;
                  }
                 
-                // Calcul de réduction (si applicable)
                  if (field.calculateDiscount && currentPromotion.discountPercent) {
                     const originalPrice = parseFloat(input.value);
                     if (!isNaN(originalPrice) && originalPrice > 0) {
                         const discountAmount = (originalPrice * currentPromotion.discountPercent) / 100;
                         const finalPrice = originalPrice - discountAmount;
-                        finalPriceInfo = ` 💲 Prix après ${currentPromotion.discountPercent}% réduction:* ${finalPrice.toFixed(2)}€\n`;
+                        finalPriceInfo = `💰 Prix après ${currentPromotion.discountPercent}% réduction: ${finalPrice.toFixed(2)} EUR\n`;
                     }
                 }
-            } 
-            // Si le champ est requis mais vide (et non caché)
-            else if (field.required && (!formGroup || !formGroup.classList.contains('hidden'))) {
+            } else if (field.required && (!formGroup || !formGroup.classList.contains('hidden'))) {
                  console.warn(`Champ requis "${field.label}" manquant.`);
             }
         });
     }
 
       if (finalPriceInfo) { message += `\n${finalPriceInfo}`; }
-      message += `\n 🏷️ Promotion Appliquée:  ${currentPromotion.name} (-${currentPromotion.discountPercent || 'N/A'}%)\n`;
-      message += `\n ⏰ Demande envoyée le ${new Date().toLocaleDateString('fr-FR')}_`;
+      
+      message += `\n✅ Promotion Appliquée: ${currentPromotion.name} (-${currentPromotion.discountPercent || 'N/A'}%)\n`;
+      message += `\n🕒 Demande envoyée le ${new Date().toLocaleDateString('fr-FR')}`;
       return message;
 }
 
@@ -651,14 +653,18 @@ if (promoFormFieldsContainer) {
 }
 
 
+
     // Bouton d'envoi du formulaire
     if (submitPromoButton) {
         submitPromoButton.addEventListener('click', () => {
             if (!currentPromotion || submitPromoButton.disabled) return;
-            const message = formatPromoMessage();
+            
+            // MODIFIE CETTE LIGNE :
+            const message = formatPromoMessageForLink(); // Appelle la BONNE fonction
+            
             const encodedMessage = encodeURIComponent(message);
             const telegramUrl = `https://t.me/${TARGET_TELEGRAM_USERNAME}?text=${encodedMessage}`;
-             // Vérifie si tg est initialisé avant de l'utiliser
+             
             if (tg) {
                 tg.openLink(telegramUrl);
             } else {
@@ -669,7 +675,7 @@ if (promoFormFieldsContainer) {
     } else {
         console.error("Submit promo button (#submit-promo-button) not found!");
     }
-
+    
 
     // --- INITIALISATION ---
     try {
