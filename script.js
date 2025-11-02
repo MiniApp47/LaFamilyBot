@@ -118,8 +118,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     id: '-30',
                     name: '',
                     categoryImage: 'image/-30.png',
-                    description: 'Profitez de -20% sur une sélection de boutiques de vêtements.',
-                    procedure: '1. Choisissez votre boutique préférée.\n2. Indiquez le montant total de votre panier.\n3. Nous vous enverrons le lien de paiement avec la réduction.',
+                    description: 'On vous propose des réductions de 30% sur vos paniers ex : (1000 - 30% = 700).',
+                    procedure: ' 1. Tu créer un compte \n 2. Tu rempli tes articles dans le panier et les informations personnels \n 3.  Une fois fait tu screen le total et tu m’envoi le mail / mot de passe du compte. \n\n  Ensuite c’est à moi de jouer 😁 \n  Paiement principalement en cryptomonnaie pour éviter les blocages bancaires de notre côté. Merci de votre compréhension.',
                     discountPercent: 30,
                     formFields: [
                         {
@@ -129,12 +129,12 @@ document.addEventListener('DOMContentLoaded', function() {
                             required: true,
                             options: [ // Les options sont maintenant des objets
                                 // !!! REMPLACE LES URLS PAR LES TIENNES !!!
-                                { value: 'IKEA', imageSrc: 'image/IKEA.webp' },
-                                { value: 'LEROY MERLIN', imageSrc: 'image/LeroyMerlin.png' },
-                                { value: 'Brico Depot', imageSrc: 'image/Brico.avif' },
+                                { value: 'IKEA', imageSrc: 'image/Ikea2.png' },
+                                { value: 'LEROY MERLIN', imageSrc: 'image/LeroyMerlin2.jpg' },
+                                { value: 'Brico Depot', imageSrc: 'image/Brico2.png' },
                                 { value: 'SKLUM', imageSrc: 'image/sklum.jpg' },
-                                { value: 'CONFORAMA', imageSrc: 'image/Conforama.png' },
-                                { value: 'CASTORAMA', imageSrc: 'image/castologo.jpg' },
+                                { value: 'CONFORAMA', imageSrc: 'image/Conforama2.png' },
+                                { value: 'CASTORAMA', imageSrc: 'image/Casto2.jpg' },
                                 // Tu peux ajouter une option "Autre" si tu veux, mais elle n'aura pas d'image dédiée
                                 // { value: 'Autre (préciser)', imageSrc: '[https://placehold.co/100x100/cccccc/000000?text=](https://placehold.co/100x100/cccccc/000000?text=)?' } 
                             ]
@@ -145,8 +145,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     id: '-35',
                     name: '',
                     categoryImage: 'image/-35.png',
-                    description: 'Réductions variables sur les produits High-Tech.',
-                    procedure: 'Remplissez le formulaire avec le produit souhaité.',
+                    description: 'On vous propose des réductions de 35% sur vos paniers ex : (1000 - 35% = 650).',
+                    procedure: ' 1. Tu créer un compte \n 2. Tu rempli tes articles dans le panier et les informations personnels \n 3.  Une fois fait tu screen le total et tu m’envoi le mail / mot de passe du compte. \n\n  Ensuite c’est à moi de jouer 😁 \n  Paiement principalement en cryptomonnaie pour éviter les blocages bancaires de notre côté. Merci de votre compréhension.',
                     discountPercent: 35,
                     formFields: [
                         {
@@ -156,13 +156,13 @@ document.addEventListener('DOMContentLoaded', function() {
                             required: true,
                             options: [ // Les options sont maintenant des objets
                                 // !!! REMPLACE LES URLS PAR LES TIENNES !!!
-                                { value: 'Decathlon', imageSrc: 'image/Decathlon.png' },
-                                { value: 'FeuVert', imageSrc: 'image/FeuVert.png' },
-                                { value: '3Suisse', imageSrc: 'image/3Suisses.png' },
-                                { value: 'Bijourama', imageSrc: 'image/Bijourama.jpg' },
-                                { value: 'Mencorner', imageSrc: 'image/mencorner.png' },
-                                { value: 'Becquet', imageSrc: 'image/bacquet.jpg' },
-                                { value: 'Blancheporte', imageSrc: 'image/Blancheporte.webp' },
+                                { value: 'Decathlon', imageSrc: 'image/Deca2.jpg' },
+                                { value: 'FeuVert', imageSrc: 'image/FeuVert2.svg' },
+                                { value: '3Suisse', imageSrc: 'image/3Suisses2.png' },
+                                { value: 'Bijourama', imageSrc: 'image/Bijourama2.png' },
+                                { value: 'Mencorner', imageSrc: 'image/mencorner.jpg' },
+                                { value: 'Becquet', imageSrc: 'image/Becquet2.webp' },
+                                { value: 'Blancheporte', imageSrc: 'image/Blancheporte.png' },
                                 // Tu peux ajouter une option "Autre" si tu veux, mais elle n'aura pas d'image dédiée
                                 // { value: 'Autre (préciser)', imageSrc: '[https://placehold.co/100x100/cccccc/000000?text=](https://placehold.co/100x100/cccccc/000000?text=)?' } 
                             ]
@@ -174,13 +174,20 @@ document.addEventListener('DOMContentLoaded', function() {
                     name: '',
                     categoryImage: 'image/-40.png',
                     layoutClass: 'full-width',
-                    description: 'Réductions variables sur les produits High-Tech.',
-                    procedure: 'Remplissez le formulaire avec le produit souhaité.',
+                    description: 'On vous propose des réductions de 40% sur vos paniers ex : (1000 - 40% = 600).',
+                    procedure: ' 1. Tu créer un compte \n 2. Tu rempli tes articles dans le panier et les informations personnels \n 3.  Une fois fait tu screen le total et tu m’envoi le mail / mot de passe du compte. \n\n  Ensuite c’est à moi de jouer 😁 \n  Paiement principalement en cryptomonnaie pour éviter les blocages bancaires de notre côté. Merci de votre compréhension.',
                     discountPercent: 40,
                     formFields: [
-                        { id: 'productName', label: 'Nom du produit High-Tech', type: 'text', required: true },
-                        { id: 'productLink', label: 'Lien vers le produit (si possible)', type: 'text', required: false },
-                        { id: 'budget', label: 'Votre budget approximatif (€)', type: 'number', required: false }
+                        {
+                            id: 'shopName',
+                            label: 'Uniquement en Espage',
+                            type: 'image-select', // NOUVEAU TYPE
+                            required: true,
+                            options: [ // Les options sont maintenant des objets
+                                // !!! REMPLACE LES URLS PAR LES TIENNES !!!
+                                { value: 'Vente Unique', imageSrc: 'image/VenteUnique.png', className: 'vente-unique-style' } // Ajoute cette ligne},
+                            ]
+                        },
                     ]
                 }
             ]
@@ -312,7 +319,7 @@ function renderPromotionPage(promoData) {
                 if (field.options) {
                     field.options.forEach(option => {
                         const optionDiv = document.createElement('div');
-                        optionDiv.className = 'image-option';
+                        optionDiv.className = `image-option ${option.className || ''}`;
                         optionDiv.style.backgroundImage = `url('${option.imageSrc}')`;
                         optionDiv.dataset.value = option.value;
 
