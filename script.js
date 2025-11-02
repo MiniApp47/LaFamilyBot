@@ -90,19 +90,19 @@ document.addEventListener('DOMContentLoaded', function() {
             quickSendButtons: [
                 { 
                     label: 'Offre Getyourguide', 
-                    message: "Bonjour, je suis intéressé par l'offre -40% sur Getyourguide.",
+                    message: " 👋 Bonjour, je suis intéressé par l'offre -40% sur Getyourguide.",
                     imageSrc: 'image/GetLogo.jpg' ,
                     layoutClass: 'quick-send-full' 
                 },
                 { 
                     label: 'Offre Disneyland', 
-                    message: "Bonjour, je suis intéressé par l'offre -40% pour Disneyland." ,
+                    message: " 👋 Bonjour, je suis intéressé par l'offre -40% pour Disneyland." ,
                     imageSrc: 'image/DisneyLogo.png' ,
                     layoutClass: 'quick-send-full2' 
                 },
                 { 
                     label: 'Offre Parc Astérix', 
-                    message: "Bonjour, je suis intéressé par l'offre -40% pour le Parc Astérix." ,
+                    message: " 👋 Bonjour, je suis intéressé par l'offre -40% pour le Parc Astérix." ,
                     imageSrc: 'image/logoAsterix.png' ,
                     layoutClass: 'quick-send-full1'
                 }
@@ -505,7 +505,7 @@ function formatPromoMessage() {
     if (!currentPromotion) return "Erreur: Aucune promotion sélectionnée.";
     const promoTitle = parentCategory ? `${parentCategory.name} - ${currentPromotion.name}` : currentPromotion.name;
     
-    let message = `*Nouvelle demande - ${promoTitle}*\n\n*Détails de la demande :*\n`;
+    let message = ` 🛒 Nouvelle demande - ${promoTitle} \n\n ➡️ Détails de la demande : \n`;
     let finalPriceInfo = '';
 
     if (currentPromotion.formFields) {
@@ -528,7 +528,7 @@ function formatPromoMessage() {
                     if (!isNaN(originalPrice) && originalPrice > 0) {
                         const discountAmount = (originalPrice * currentPromotion.discountPercent) / 100;
                         const finalPrice = originalPrice - discountAmount;
-                        finalPriceInfo = `*Prix après ${currentPromotion.discountPercent}% réduction:* ${finalPrice.toFixed(2)}€\n`;
+                        finalPriceInfo = ` 💲 Prix après ${currentPromotion.discountPercent}% réduction:* ${finalPrice.toFixed(2)}€\n`;
                     }
                 }
             } 
@@ -540,8 +540,8 @@ function formatPromoMessage() {
     }
 
       if (finalPriceInfo) { message += `\n${finalPriceInfo}`; }
-      message += `\n*Promotion Appliquée:* ${currentPromotion.name} (-${currentPromotion.discountPercent || 'N/A'}%)\n`;
-      message += `\n_Demande envoyée le ${new Date().toLocaleDateString('fr-FR')}_`;
+      message += `\n 🏷️ Promotion Appliquée:  ${currentPromotion.name} (-${currentPromotion.discountPercent || 'N/A'}%)\n`;
+      message += `\n ⏰ Demande envoyée le ${new Date().toLocaleDateString('fr-FR')}_`;
       return message;
 }
 
