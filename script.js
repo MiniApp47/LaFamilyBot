@@ -80,16 +80,32 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             ]
         },
-         {
+        {
             id: 'autrePromo',
-            name: '',
+            name: '', 
             categoryImage: 'image/Activite.png',
             layoutClass: '',
-            description: 'Description de l\'autre promotion.',
-            procedure: 'Procédure pour l\'autre promotion.',
-            discountPercent: 10,
-            formFields: [
-                 { id: 'activityName', label: 'Nom de l\'activité', type: 'text', required: true },
+            description: 'Activités -40%',
+            procedure: '1. Choisissez une offre ci-dessous.\n2. Nous prévenir 4 jours à l\'avance.\n3. Nous vous contacterons pour finaliser.',
+            quickSendButtons: [
+                { 
+                    label: 'Offre Getyourguide', 
+                    message: "Bonjour, je suis intéressé par l'offre -40% sur Getyourguide.",
+                    imageSrc: 'image/Getlogo.jpg' ,
+                    layoutClass: 'quick-send-full' 
+                },
+                { 
+                    label: 'Offre Disneyland', 
+                    message: "Bonjour, je suis intéressé par l'offre -40% pour Disneyland." ,
+                    imageSrc: 'image/DisneyLogo.png' ,
+                    layoutClass: 'quick-send-full2' 
+                },
+                { 
+                    label: 'Offre Parc Astérix', 
+                    message: "Bonjour, je suis intéressé par l'offre -40% pour le Parc Astérix." ,
+                    imageSrc: 'image/logoAsterix.png' ,
+                    layoutClass: 'quick-send-full1'
+                }
             ]
         },
         {
@@ -246,153 +262,187 @@ document.addEventListener('DOMContentLoaded', function() {
         showPage('page-subcategories');
     }
 
-    function renderPromotionPage(promoData) {
-        currentPromotion = promoData;
-        if (!currentPromotion) return;
-    
-        if (!promoPageTitle || !promoDescriptionText || !promoProcedureText || !promoFormFieldsContainer) {
-            console.error("One or more promotion page elements are missing!");
-            return;
-        }
-    
-        promoPageTitle.innerText = currentPromotion.name;
-        promoDescriptionText.innerText = currentPromotion.description || "Pas de description.";
-        promoProcedureText.innerText = currentPromotion.procedure ? currentPromotion.procedure.replace(/\\n/g, '\n') : 'Aucune procédure spécifiée.';
-        promoFormFieldsContainer.innerHTML = '';
-    
-        if (currentPromotion.formFields) {
-            currentPromotion.formFields.forEach(field => {
-                const formGroup = document.createElement('div');
-                formGroup.className = 'form-group';
-                if (field.id === 'otherShop') {
-                    formGroup.classList.add('hidden'); // Caché par défaut
-                }
-    
-                const label = document.createElement('label');
-                label.setAttribute('for', field.id); // L'attribut 'for' pointera vers l'input caché pour image-select
-                label.textContent = field.label + (field.required ? ' *' : '');
-                formGroup.appendChild(label);
-    
-                let inputElement; // Pour stocker la valeur sélectionnée
-    
-                // NOUVELLE LOGIQUE pour 'image-select'
-                if (field.type === 'image-select') {
-                    // 1. Crée un conteneur pour les images
-                    const imageSelectContainer = document.createElement('div');
-                    imageSelectContainer.className = 'image-select-container';
-                    imageSelectContainer.id = `container-${field.id}`; // ID unique pour le conteneur
-    
-                    // 2. Crée un input caché pour stocker la valeur
-                    inputElement = document.createElement('input');
-                    inputElement.type = 'hidden';
-                    inputElement.id = field.id;
-                    inputElement.name = field.id;
-                    if (field.required) {
-                        inputElement.required = true;
-                    }
-                    formGroup.appendChild(inputElement); // Ajoute l'input caché au groupe
-    
-                    // 3. Crée les options images cliquables
-                    if (field.options) {
-                        field.options.forEach(option => {
-                            const optionDiv = document.createElement('div');
-                            optionDiv.className = 'image-option';
-                            optionDiv.style.backgroundImage = `url('${option.imageSrc}')`;
-                            optionDiv.dataset.value = option.value; // Stocke la valeur à enregistrer
-    
-                            // Ajoute l'écouteur de clic pour la sélection
-                            optionDiv.addEventListener('click', () => {
-                                // Désélectionne les autres options dans ce groupe
-                                imageSelectContainer.querySelectorAll('.image-option').forEach(opt => opt.classList.remove('selected'));
-                                // Sélectionne l'option cliquée
-                                optionDiv.classList.add('selected');
-                                // Met à jour la valeur de l'input caché
-                                inputElement.value = option.value;
-                                // Déclenche un événement 'input' sur l'input caché pour la validation
-                                inputElement.dispatchEvent(new Event('input', { bubbles: true })); 
-                                
-                                // Gère l'affichage du champ "Autre boutique" si besoin
-                                if (field.id === 'shopName') {
-                                    const otherShopGroup = document.getElementById('otherShop')?.closest('.form-group');
-                                    if (otherShopGroup) {
-                                         otherShopGroup.classList.toggle('hidden', option.value !== 'Autre (préciser)');
-                                     }
-                                }
-                            });
-                            imageSelectContainer.appendChild(optionDiv);
-                        });
-                    }
-                    formGroup.appendChild(imageSelectContainer); // Ajoute le conteneur d'images au groupe
-    
-                } else if (field.type === 'select') {
-                    inputElement = document.createElement('select');
-                    const defaultOption = document.createElement('option');
-                    defaultOption.value = '';
-                    defaultOption.textContent = `-- ${field.label} --`;
-                    defaultOption.disabled = true;
-                    defaultOption.selected = true;
-                    inputElement.appendChild(defaultOption);
-                    if (field.options) {
-                        field.options.forEach(optionText => {
-                            const option = document.createElement('option');
-                            option.value = optionText;
-                            option.textContent = optionText;
-                            inputElement.appendChild(option);
-                        });
-                    }
-                    formGroup.appendChild(inputElement); // Ajoute le select au groupe
-                } else if (field.type === 'textarea') {
-                    inputElement = document.createElement('textarea');
-                    inputElement.id = field.id;
-                    inputElement.name = field.id;
-                    formGroup.appendChild(inputElement); // Ajoute textarea au groupe
-                } else { // Inputs normaux (text, date, number, datetime-local)
-                    inputElement = document.createElement('input');
-                    inputElement.type = field.type;
-                    inputElement.id = field.id;
-                    inputElement.name = field.id;
-                    if (field.type === 'number') {
-                        inputElement.step = '0.01';
-                        inputElement.min = '0';
-                    }
-                    if (field.type === 'datetime-local' || field.type === 'date') {
-                         inputElement.placeholder = ' '; 
-                    }
-                    formGroup.appendChild(inputElement);
-                }
-                if (field.required && inputElement) { // Attache 'required' à l'élément créé
-                    inputElement.required = true;
-                }
-                 
-                 
-                // Logique pour le calcul de réduction (inchangée, mais attachée à l'input approprié)
-                if (field.calculateDiscount && currentPromotion.discountPercent && inputElement && inputElement.type !== 'hidden') {
-                    const discountDisplay = document.createElement('div');
-                    discountDisplay.id = `${field.id}-discount`;
-                    discountDisplay.className = 'discount-display hidden';
-                    formGroup.appendChild(discountDisplay);
-                    inputElement.addEventListener('input', () => calculateDiscount(field.id, currentPromotion.discountPercent));
-                }
-    
-                promoFormFieldsContainer.appendChild(formGroup);
-            });
-        }
-    
-        if (backButtonPromoPage) {
-            backButtonPromoPage.onclick = () => {
-                 if (parentCategory) {
-                     renderSubcategories(parentCategory.id);
-                 } else {
-                     showPage('page-home');
-                 }
-            };
-        } else {
-            console.error("Back button for promotion page (#back-to-categories) not found!");
-        }
-    
-        checkFormValidity();
-        showPage('page-promotion');
+
+// REMPLACE l'ancienne fonction par celle-ci
+function renderPromotionPage(promoData) {
+    currentPromotion = promoData;
+    if (!currentPromotion) return;
+
+    if (!promoPageTitle || !promoDescriptionText || !promoProcedureText || !promoFormFieldsContainer || !submitPromoButton) {
+        console.error("One or more promotion page elements are missing!");
+        return;
     }
+
+    promoPageTitle.innerText = currentPromotion.name || '';
+    promoDescriptionText.innerText = currentPromotion.description || "Pas de description.";
+    promoProcedureText.innerText = currentPromotion.procedure ? currentPromotion.procedure.replace(/\\n/g, '\n') : 'Aucune procédure spécifiée.';
+    promoFormFieldsContainer.innerHTML = ''; // Vide le conteneur
+
+    // NOUVELLE LOGIQUE :
+    // CAS 1 : La promotion a des CHAMPS DE FORMULAIRE (ex: Booking, Boutique)
+    if (currentPromotion.formFields && currentPromotion.formFields.length > 0) {
+        
+        currentPromotion.formFields.forEach(field => {
+            const formGroup = document.createElement('div');
+            formGroup.className = 'form-group';
+            if (field.id === 'otherShop') {
+                formGroup.classList.add('hidden'); // Caché par défaut
+            }
+
+            const label = document.createElement('label');
+            label.setAttribute('for', field.id);
+            label.textContent = field.label + (field.required ? ' *' : '');
+            formGroup.appendChild(label);
+
+            let inputElement; 
+
+            if (field.type === 'image-select') {
+                // ... (Code pour 'image-select') ...
+                const imageSelectContainer = document.createElement('div');
+                imageSelectContainer.className = 'image-select-container';
+                imageSelectContainer.id = `container-${field.id}`;
+
+                inputElement = document.createElement('input');
+                inputElement.type = 'hidden';
+                inputElement.id = field.id;
+                inputElement.name = field.id;
+                if (field.required) inputElement.required = true;
+                formGroup.appendChild(inputElement); 
+
+                if (field.options) {
+                    field.options.forEach(option => {
+                        const optionDiv = document.createElement('div');
+                        optionDiv.className = 'image-option';
+                        optionDiv.style.backgroundImage = `url('${option.imageSrc}')`;
+                        optionDiv.dataset.value = option.value;
+
+                        optionDiv.addEventListener('click', () => {
+                            imageSelectContainer.querySelectorAll('.image-option').forEach(opt => opt.classList.remove('selected'));
+                            optionDiv.classList.add('selected');
+                            inputElement.value = option.value;
+                            inputElement.dispatchEvent(new Event('input', { bubbles: true })); 
+                            
+                            if (field.id === 'shopName') {
+                                const otherShopGroup = document.getElementById('otherShop')?.closest('.form-group');
+                                if (otherShopGroup) {
+                                     otherShopGroup.classList.toggle('hidden', option.value !== 'Autre (préciser)');
+                                 }
+                            }
+                        });
+                        imageSelectContainer.appendChild(optionDiv);
+                    });
+                }
+                formGroup.appendChild(imageSelectContainer);
+
+            } else if (field.type === 'select') {
+                // ... (Code pour 'select') ...
+                inputElement = document.createElement('select');
+                const defaultOption = document.createElement('option');
+                defaultOption.value = '';
+                defaultOption.textContent = `-- ${field.label} --`;
+                defaultOption.disabled = true;
+                defaultOption.selected = true;
+                inputElement.appendChild(defaultOption);
+                if (field.options) {
+                    field.options.forEach(optionText => {
+                        const option = document.createElement('option');
+                        option.value = optionText;
+                        option.textContent = optionText;
+                        inputElement.appendChild(option);
+                    });
+                }
+                formGroup.appendChild(inputElement);
+            } else if (field.type === 'textarea') {
+                // ... (Code pour 'textarea') ...
+                inputElement = document.createElement('textarea');
+                inputElement.id = field.id;
+                inputElement.name = field.id;
+                formGroup.appendChild(inputElement);
+            } else { 
+                // ... (Code pour 'input' text, number, date) ...
+                inputElement = document.createElement('input');
+                inputElement.type = field.type;
+                inputElement.id = field.id;
+                inputElement.name = field.id;
+                 if (field.type === 'number') {
+                    inputElement.step = '0.01';
+                    inputElement.min = '0';
+                }
+                formGroup.appendChild(inputElement);
+            }
+                 
+            if (field.required && inputElement) {
+                inputElement.required = true;
+            }
+
+            if (field.calculateDiscount && currentPromotion.discountPercent && inputElement && inputElement.type !== 'hidden') {
+                const discountDisplay = document.createElement('div');
+                discountDisplay.id = `${field.id}-discount`;
+                discountDisplay.className = 'discount-display hidden';
+                formGroup.appendChild(discountDisplay);
+                inputElement.addEventListener('input', () => calculateDiscount(field.id, currentPromotion.discountPercent));
+            }
+
+            promoFormFieldsContainer.appendChild(formGroup);
+        });
+
+        // Affiche le bouton "Envoyer" et vérifie la validité
+        submitPromoButton.style.display = 'block';
+        checkFormValidity();
+
+    // CAS 2 : La promotion a des BOUTONS D'ACTION RAPIDE (ex: Activités)
+    } else if (currentPromotion.quickSendButtons && currentPromotion.quickSendButtons.length > 0) {
+        
+        const quickSendList = document.createElement('div');
+        quickSendList.className = 'quick-send-list';
+        
+        currentPromotion.quickSendButtons.forEach(btn => {
+            const quickButton = document.createElement('button');
+            // Ajoute la classe de layout (ex: 'quick-send-full')
+            quickButton.className = `quick-send-button ${btn.layoutClass || ''}`;
+            quickButton.dataset.message = btn.message;
+
+            if (btn.imageSrc) {
+                quickButton.classList.add('image-button');
+                quickButton.style.backgroundImage = `url('${btn.imageSrc}')`;
+                quickButton.setAttribute('aria-label', btn.label);
+            } else {
+                quickButton.textContent = btn.label;
+            }
+            
+            quickSendList.appendChild(quickButton);
+        });
+        
+        promoFormFieldsContainer.appendChild(quickSendList);
+        
+        // Cache le bouton "Envoyer la demande" principal
+        submitPromoButton.style.display = 'none';
+    }
+    
+    // CAS 3 : La promotion n'a ni formulaire, ni boutons (page d'info simple)
+    else {
+        // Cache le bouton "Envoyer la demande"
+        submitPromoButton.style.display = 'none';
+         promoFormFieldsContainer.innerHTML = '<p style="color: var(--hint-color); font-style: italic;">Aucune action requise pour cette offre.</p>';
+    }
+
+    // Gestion du bouton retour (inchangée)
+    if (backButtonPromoPage) {
+        backButtonPromoPage.onclick = () => {
+             if (parentCategory) {
+                 renderSubcategories(parentCategory.id);
+             } else {
+                 showPage('page-home');
+             }
+        };
+    } else {
+        console.error("Back button for promotion page (#back-to-categories) not found!");
+    }
+    
+    showPage('page-promotion');
+}
+
+
 
     // --- LOGIQUE FORMULAIRE & CALCUL ---
     function calculateDiscount(priceFieldId, discountPercent) {
@@ -564,12 +614,34 @@ function formatPromoMessage() {
 
     // Le bouton retour de la page promo est géré dynamiquement dans renderPromotionPage
 
-    // Écouteur pour la validité du formulaire
-    if (promoFormFieldsContainer) {
-        promoFormFieldsContainer.addEventListener('input', checkFormValidity);
-    } else {
-        console.error("Promo form fields container (#promo-form-fields) not found!");
-    }
+  //  l'écouteur du formulaire pour qu'il gère les deux cas
+if (promoFormFieldsContainer) {
+    // Gère la validité (pour les formulaires normaux)
+    promoFormFieldsContainer.addEventListener('input', checkFormValidity);
+
+    // Gère le clic sur les boutons d'action rapide
+    promoFormFieldsContainer.addEventListener('click', (e) => {
+        const quickButton = e.target.closest('.quick-send-button');
+        if (quickButton) {
+            const message = quickButton.dataset.message;
+            if (!message) {
+                console.error('Quick send button has no message data!');
+                return;
+            }
+            const encodedMessage = encodeURIComponent(message);
+            const telegramUrl = `https://t.me/${TARGET_TELEGRAM_USERNAME}?text=${encodedMessage}`;
+            
+            if (tg) {
+                tg.openLink(telegramUrl);
+            } else {
+                console.error("Telegram WebApp (tg) is not initialized.");
+                window.open(telegramUrl, '_blank');
+            }
+        }
+    });
+} else {
+    console.error("Promo form fields container (#promo-form-fields) not found!");
+}
 
 
     // Bouton d'envoi du formulaire
